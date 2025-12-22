@@ -1,4 +1,5 @@
 use crate::skill::frontmatter::Frontmatter;
+use std::fmt;
 use std::path::PathBuf;
 use thiserror::Error;
 
@@ -89,15 +90,21 @@ impl Manifest {
         Ok((frontmatter, body, body_start_line))
     }
 
-    /// Reconstruct the full SKILL.md content
-    pub fn render(&self) -> String {
-        format!("---\n{}\n---\n\n{}", self.frontmatter_raw.trim(), self.body)
-    }
-
     /// Reconstruct with reformatted frontmatter
     pub fn to_string_formatted(&self) -> Result<String, serde_yaml::Error> {
         let yaml = self.frontmatter.to_yaml()?;
         Ok(format!("---\n{}---\n\n{}", yaml, self.body))
+    }
+}
+
+impl fmt::Display for Manifest {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(
+            f,
+            "---\n{}\n---\n\n{}",
+            self.frontmatter_raw.trim(),
+            self.body
+        )
     }
 }
 
