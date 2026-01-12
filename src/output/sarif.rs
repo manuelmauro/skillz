@@ -173,9 +173,9 @@ impl OutputFormatter for SarifFormatter {
             runs: vec![SarifRun {
                 tool: SarifTool {
                     driver: SarifDriver {
-                        name: "skillz",
+                        name: "skilo",
                         version: env!("CARGO_PKG_VERSION"),
-                        information_uri: "https://github.com/example/skillz",
+                        information_uri: "https://github.com/example/skilo",
                         rules,
                     },
                 },

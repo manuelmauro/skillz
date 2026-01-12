@@ -6,7 +6,7 @@ Proposed
 
 ## Context
 
-[ADR 0001](./0001-skillz-cli-tool.md) defines the architecture and commands for the skillz CLI tool. This ADR describes the Rust implementation details, including crate dependencies, module organization, key data structures, and design patterns.
+[ADR 0001](./0001-skilo-cli-tool.md) defines the architecture and commands for the skilo CLI tool. This ADR describes the Rust implementation details, including crate dependencies, module organization, key data structures, and design patterns.
 
 ## Decision
 
@@ -14,13 +14,13 @@ Proposed
 
 ```toml
 [package]
-name = "skillz"
+name = "skilo"
 version = "0.1.0"
 edition = "2021"
 rust-version = "1.75"
 description = "CLI tool for Agent Skills development"
 license = "MIT OR Apache-2.0"
-repository = "https://github.com/example/skillz"
+repository = "https://github.com/example/skilo"
 keywords = ["agent", "skills", "cli", "ai"]
 categories = ["command-line-utilities", "development-tools"]
 
@@ -103,7 +103,7 @@ use clap::{Parser, Subcommand, ValueEnum};
 use std::path::PathBuf;
 
 #[derive(Parser)]
-#[command(name = "skillz")]
+#[command(name = "skilo")]
 #[command(author, version, about, long_about = None)]
 #[command(propagate_version = true)]
 pub struct Cli {
@@ -729,19 +729,19 @@ use thiserror::Error;
 #[derive(Error, Diagnostic, Debug)]
 pub enum SkillzError {
     #[error("Skill '{name}' already exists at {path}")]
-    #[diagnostic(code(skillz::skill_exists))]
+    #[diagnostic(code(skilo::skill_exists))]
     SkillExists { name: String, path: String },
 
     #[error("Invalid skill name: {0}")]
-    #[diagnostic(code(skillz::invalid_name))]
+    #[diagnostic(code(skilo::invalid_name))]
     InvalidName(String),
 
     #[error("No skills found in {path}")]
-    #[diagnostic(code(skillz::no_skills))]
+    #[diagnostic(code(skilo::no_skills))]
     NoSkillsFound { path: String },
 
     #[error("Configuration error: {0}")]
-    #[diagnostic(code(skillz::config))]
+    #[diagnostic(code(skilo::config))]
     Config(String),
 
     #[error(transparent)]
@@ -824,7 +824,7 @@ impl Config {
         let config_path = path
             .cloned()
             .or_else(|| Self::find_config())
-            .unwrap_or_else(|| PathBuf::from(".skillzrc.toml"));
+            .unwrap_or_else(|| PathBuf::from(".skilorc.toml"));
 
         if !config_path.exists() {
             return Ok(Self::default());
@@ -837,7 +837,7 @@ impl Config {
     }
 
     fn find_config() -> Option<PathBuf> {
-        let candidates = [".skillzrc.toml", "skillz.toml", ".skillz/config.toml"];
+        let candidates = [".skilorc.toml", "skilo.toml", ".skilo/config.toml"];
 
         for name in candidates {
             let path = PathBuf::from(name);
@@ -1134,7 +1134,7 @@ use tempfile::TempDir;
 fn test_new_creates_skill() {
     let temp = TempDir::new().unwrap();
 
-    Command::cargo_bin("skillz")
+    Command::cargo_bin("skilo")
         .unwrap()
         .args(["new", "my-skill", "--lang", "bash"])
         .current_dir(&temp)
@@ -1150,7 +1150,7 @@ fn test_lint_valid_skill() {
     let temp = TempDir::new().unwrap();
 
     // Create valid skill
-    Command::cargo_bin("skillz")
+    Command::cargo_bin("skilo")
         .unwrap()
         .args(["new", "valid-skill"])
         .current_dir(&temp)
@@ -1158,7 +1158,7 @@ fn test_lint_valid_skill() {
         .success();
 
     // Lint should pass
-    Command::cargo_bin("skillz")
+    Command::cargo_bin("skilo")
         .unwrap()
         .args(["lint", "valid-skill"])
         .current_dir(&temp)
@@ -1176,7 +1176,7 @@ fn test_lint_invalid_name() {
         "---\nname: Invalid_Skill\ndescription: Bad\n---\n",
     ).unwrap();
 
-    Command::cargo_bin("skillz")
+    Command::cargo_bin("skilo")
         .unwrap()
         .args(["lint", "Invalid_Skill"])
         .current_dir(&temp)

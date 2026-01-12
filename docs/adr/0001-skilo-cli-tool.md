@@ -19,21 +19,21 @@ Currently, there is a `skills-ref` library mentioned in the specification for va
 
 ## Decision
 
-We will build **skillz**, a command-line tool written in Rust that provides comprehensive tooling for Agent Skills development.
+We will build **skilo**, a command-line tool written in Rust that provides comprehensive tooling for Agent Skills development.
 
 ### Core Commands
 
 | Command | Description |
 |---------|-------------|
-| `skillz new <name>` | Scaffold a new skill with required structure |
-| `skillz lint [path]` | Validate skill(s) against the specification |
-| `skillz fmt [path]` | Format SKILL.md files consistently |
-| `skillz check [path]` | Run all validations (lint + format check) |
-| `skillz validate [path]` | Alias for `lint` with strict mode |
+| `skilo new <name>` | Scaffold a new skill with required structure |
+| `skilo lint [path]` | Validate skill(s) against the specification |
+| `skilo fmt [path]` | Format SKILL.md files consistently |
+| `skilo check [path]` | Run all validations (lint + format check) |
+| `skilo validate [path]` | Alias for `lint` with strict mode |
 
 ### Subcommand Details
 
-#### `skillz new <name>`
+#### `skilo new <name>`
 
 Creates a new skill directory with:
 
@@ -61,7 +61,7 @@ Supported script languages:
 | javascript | `.js` | `#!/usr/bin/env node` |
 | typescript | `.ts` | `#!/usr/bin/env -S npx ts-node` |
 
-#### `skillz lint [path]`
+#### `skilo lint [path]`
 
 Validates skills against the Agent Skills Specification:
 
@@ -90,7 +90,7 @@ Options:
 - `--format <format>` - Output format: text, json, sarif (default: text)
 - `--fix` - Auto-fix simple issues where possible
 
-#### `skillz fmt [path]`
+#### `skilo fmt [path]`
 
 Formats SKILL.md files for consistency:
 
@@ -103,7 +103,7 @@ Options:
 - `--check` - Check formatting without modifying files (exit 1 if changes needed)
 - `--diff` - Show diff of changes
 
-#### `skillz check [path]`
+#### `skilo check [path]`
 
 Runs comprehensive validation suitable for CI:
 
@@ -116,7 +116,7 @@ Options:
 
 ### Configuration
 
-Supports optional `.skillzrc.toml` configuration file:
+Supports optional `.skilorc.toml` configuration file:
 
 ```toml
 [lint]

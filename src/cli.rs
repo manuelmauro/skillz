@@ -2,7 +2,7 @@ use clap::{Parser, Subcommand, ValueEnum};
 use std::path::PathBuf;
 
 #[derive(Parser)]
-#[command(name = "skillz")]
+#[command(name = "skilo")]
 #[command(author, version, about = "CLI tool for Agent Skills development", long_about = None)]
 #[command(propagate_version = true)]
 pub struct Cli {
@@ -10,7 +10,7 @@ pub struct Cli {
     pub command: Command,
 
     /// Configuration file path
-    #[arg(long, global = true, env = "SKILLZ_CONFIG")]
+    #[arg(long, global = true, env = "SKILO_CONFIG")]
     pub config: Option<PathBuf>,
 
     /// Output format

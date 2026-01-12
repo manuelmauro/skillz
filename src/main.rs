@@ -1,8 +1,8 @@
 use clap::Parser;
 use miette::Result;
-use skillz::cli::{Cli, Command};
-use skillz::commands;
-use skillz::config::Config;
+use skilo::cli::{Cli, Command};
+use skilo::commands;
+use skilo::config::Config;
 
 fn main() -> Result<()> {
     let cli = Cli::parse();

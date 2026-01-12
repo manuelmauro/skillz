@@ -55,7 +55,7 @@ install:
 	cargo install --path .
 
 .PHONY: lint
-# Run skillz lint on test fixtures
+# Run skilo lint on test fixtures
 lint:
 	cargo run -- lint .
 

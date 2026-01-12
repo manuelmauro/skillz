@@ -1,4 +1,4 @@
-# skillz
+# skilo
 
 A CLI tool for [Agent Skills](https://agentskills.io/specification) development.
 
@@ -8,8 +8,8 @@ A CLI tool for [Agent Skills](https://agentskills.io/specification) development.
 
 ```bash
 # Clone the repository
-git clone https://github.com/manuelmauro/skillz.git
-cd skillz
+git clone https://github.com/manuelmauro/skilo.git
+cd skilo
 
 # Install using make
 make install
@@ -28,16 +28,16 @@ cargo install --path .
 
 ```bash
 # Create a skill with the default template (hello-world)
-skillz new my-skill
+skilo new my-skill
 
 # Use a specific template
-skillz new my-skill --template minimal
+skilo new my-skill --template minimal
 
 # Specify the script language
-skillz new my-skill --lang python
+skilo new my-skill --lang python
 
 # Add a description and license
-skillz new my-skill --description "My awesome skill" --license MIT
+skilo new my-skill --description "My awesome skill" --license MIT
 ```
 
 **Available templates:**
@@ -52,36 +52,36 @@ skillz new my-skill --description "My awesome skill" --license MIT
 
 ```bash
 # Lint a skill directory
-skillz lint path/to/skill
+skilo lint path/to/skill
 
 # Lint all skills in current directory
-skillz lint .
+skilo lint .
 
 # Strict mode (treat warnings as errors)
-skillz lint --strict .
+skilo lint --strict .
 
 # Auto-fix simple issues
-skillz lint --fix .
+skilo lint --fix .
 ```
 
 ### Format skills
 
 ```bash
 # Format SKILL.md files
-skillz fmt path/to/skill
+skilo fmt path/to/skill
 
 # Check formatting without modifying
-skillz fmt --check .
+skilo fmt --check .
 
 # Show diff of changes
-skillz fmt --diff .
+skilo fmt --diff .
 ```
 
 ### Run all checks
 
 ```bash
 # Run lint + format check (ideal for CI)
-skillz check .
+skilo check .
 ```
 
 ### Output formats
@@ -89,9 +89,9 @@ skillz check .
 All commands support multiple output formats:
 
 ```bash
-skillz lint --format text .   # Human-readable (default)
-skillz lint --format json .   # JSON output
-skillz lint --format sarif .  # SARIF for code scanning integrations
+skilo lint --format text .   # Human-readable (default)
+skilo lint --format json .   # JSON output
+skilo lint --format sarif .  # SARIF for code scanning integrations
 ```
 
 ## Skill Structure
@@ -122,7 +122,7 @@ Detailed documentation goes here.
 
 ## Configuration
 
-Create a `.skillzrc.toml` file for project-specific settings:
+Create a `.skilorc.toml` file for project-specific settings:
 
 ```toml
 [lint]
@@ -141,7 +141,7 @@ default_lang = "python"
 
 ## CI Integration
 
-Add skillz validation to your GitHub Actions workflow:
+Add skilo validation to your GitHub Actions workflow:
 
 ```yaml
 # .github/workflows/skills.yml
@@ -161,21 +161,21 @@ jobs:
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
 
-      - name: Install skillz
-        run: cargo install --git https://github.com/manuelmauro/skillz
+      - name: Install skilo
+        run: cargo install --git https://github.com/manuelmauro/skilo --tag v0.1.0
 
       - name: Lint skills
-        run: skillz lint . --strict
+        run: skilo lint . --strict
 
       - name: Check formatting
-        run: skillz fmt . --check
+        run: skilo fmt . --check
 ```
 
 To upload results to GitHub's Security tab, use SARIF output:
 
 ```yaml
-      - name: Run skillz check
-        run: skillz lint . --format sarif > results.sarif
+      - name: Run skilo check
+        run: skilo lint . --format sarif > results.sarif
         continue-on-error: true
 
       - name: Upload SARIF

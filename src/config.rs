@@ -77,7 +77,7 @@ impl Config {
     }
 
     fn find_config() -> Option<PathBuf> {
-        let candidates = [".skillzrc.toml", "skillz.toml", ".skillz/config.toml"];
+        let candidates = [".skilorc.toml", "skilo.toml", ".skilo/config.toml"];
 
         for name in candidates {
             let path = PathBuf::from(name);
