@@ -1,4 +1,4 @@
-# ADR 0001: Skillz CLI Tool Architecture
+# ADR 0001: Skilo CLI Tool Architecture
 
 ## Status
 

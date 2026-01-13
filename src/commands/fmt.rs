@@ -1,11 +1,11 @@
 use crate::cli::{Cli, FmtArgs};
 use crate::config::Config;
-use crate::error::SkillzError;
+use crate::error::SkiloError;
 use crate::output::get_formatter;
 use crate::skill::{Discovery, Formatter, FormatterConfig, Manifest};
 use colored::Colorize;
 
-pub fn run(args: FmtArgs, config: &Config, cli: &Cli) -> Result<i32, SkillzError> {
+pub fn run(args: FmtArgs, config: &Config, cli: &Cli) -> Result<i32, SkiloError> {
     let output_formatter = get_formatter(cli.format, cli.quiet);
     let skill_formatter = Formatter::new(FormatterConfig::from(&config.fmt));
 
@@ -13,7 +13,7 @@ pub fn run(args: FmtArgs, config: &Config, cli: &Cli) -> Result<i32, SkillzError
     let skill_paths = Discovery::find_skills(&args.path);
 
     if skill_paths.is_empty() {
-        return Err(SkillzError::NoSkillsFound {
+        return Err(SkiloError::NoSkillsFound {
             path: args.path.display().to_string(),
         });
     }

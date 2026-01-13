@@ -111,7 +111,7 @@ pub struct Cli {
     pub command: Command,
 
     /// Configuration file path
-    #[arg(long, global = true, env = "SKILLZ_CONFIG")]
+    #[arg(long, global = true, env = "SKILO_CONFIG")]
     pub config: Option<PathBuf>,
 
     /// Output format
@@ -727,7 +727,7 @@ use miette::Diagnostic;
 use thiserror::Error;
 
 #[derive(Error, Diagnostic, Debug)]
-pub enum SkillzError {
+pub enum SkiloError {
     #[error("Skill '{name}' already exists at {path}")]
     #[diagnostic(code(skilo::skill_exists))]
     SkillExists { name: String, path: String },
@@ -752,7 +752,7 @@ pub enum SkillzError {
     Io(#[from] std::io::Error),
 }
 
-pub type Result<T> = std::result::Result<T, SkillzError>;
+pub type Result<T> = std::result::Result<T, SkiloError>;
 ```
 
 #### Configuration (`src/config.rs`)

@@ -1,6 +1,6 @@
 use crate::cli::{Cli, NewArgs};
 use crate::config::Config;
-use crate::error::SkillzError;
+use crate::error::SkiloError;
 use crate::output::get_formatter;
 use crate::templates::{get_template, TemplateContext};
 use once_cell::sync::Lazy;
@@ -8,16 +8,16 @@ use regex::Regex;
 
 static NAME_REGEX: Lazy<Regex> = Lazy::new(|| Regex::new(r"^[a-z0-9]+(-[a-z0-9]+)*$").unwrap());
 
-pub fn run(args: NewArgs, config: &Config, cli: &Cli) -> Result<i32, SkillzError> {
+pub fn run(args: NewArgs, config: &Config, cli: &Cli) -> Result<i32, SkiloError> {
     let formatter = get_formatter(cli.format, cli.quiet);
 
     // Validate name
     if !NAME_REGEX.is_match(&args.name) {
-        return Err(SkillzError::InvalidName(args.name));
+        return Err(SkiloError::InvalidName(args.name));
     }
 
     if args.name.len() > 64 {
-        return Err(SkillzError::InvalidName(format!(
+        return Err(SkiloError::InvalidName(format!(
             "{} (name too long, max 64 chars)",
             args.name
         )));
@@ -31,7 +31,7 @@ pub fn run(args: NewArgs, config: &Config, cli: &Cli) -> Result<i32, SkillzError
 
     // Check if skill already exists
     if skill_dir.exists() {
-        return Err(SkillzError::SkillExists {
+        return Err(SkiloError::SkillExists {
             name: args.name,
             path: skill_dir.display().to_string(),
         });

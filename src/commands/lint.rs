@@ -1,10 +1,10 @@
 use crate::cli::{Cli, LintArgs};
 use crate::config::Config;
-use crate::error::SkillzError;
+use crate::error::SkiloError;
 use crate::output::get_formatter;
 use crate::skill::{Discovery, Manifest, ValidationResult, Validator};
 
-pub fn run(args: LintArgs, config: &Config, cli: &Cli) -> Result<i32, SkillzError> {
+pub fn run(args: LintArgs, config: &Config, cli: &Cli) -> Result<i32, SkiloError> {
     let formatter = get_formatter(cli.format, cli.quiet);
     let strict = args.strict || config.lint.strict;
 
@@ -12,7 +12,7 @@ pub fn run(args: LintArgs, config: &Config, cli: &Cli) -> Result<i32, SkillzErro
     let skill_paths = Discovery::find_skills(&args.path);
 
     if skill_paths.is_empty() {
-        return Err(SkillzError::NoSkillsFound {
+        return Err(SkiloError::NoSkillsFound {
             path: args.path.display().to_string(),
         });
     }

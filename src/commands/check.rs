@@ -1,9 +1,9 @@
 use crate::cli::{CheckArgs, Cli, FmtArgs, LintArgs};
 use crate::config::Config;
-use crate::error::SkillzError;
+use crate::error::SkiloError;
 use crate::output::get_formatter;
 
-pub fn run(args: CheckArgs, config: &Config, cli: &Cli) -> Result<i32, SkillzError> {
+pub fn run(args: CheckArgs, config: &Config, cli: &Cli) -> Result<i32, SkiloError> {
     let formatter = get_formatter(cli.format, cli.quiet);
 
     formatter.format_message("Running lint...");

@@ -2,7 +2,7 @@ use miette::Diagnostic;
 use thiserror::Error;
 
 #[derive(Error, Diagnostic, Debug)]
-pub enum SkillzError {
+pub enum SkiloError {
     #[error("Skill '{name}' already exists at {path}")]
     #[diagnostic(code(skilo::skill_exists))]
     SkillExists { name: String, path: String },
@@ -38,4 +38,4 @@ pub enum SkillzError {
     Io(#[from] std::io::Error),
 }
 
-pub type Result<T> = std::result::Result<T, SkillzError>;
+pub type Result<T> = std::result::Result<T, SkiloError>;

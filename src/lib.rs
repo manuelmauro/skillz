@@ -7,4 +7,4 @@ pub mod output;
 pub mod skill;
 pub mod templates;
 
-pub use error::{Result, SkillzError};
+pub use error::{Result, SkiloError};
