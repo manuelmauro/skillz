@@ -19,6 +19,7 @@ clap = { version = "4", features = ["derive", "env", "wrap_help"] }
 serde = { version = "1", features = ["derive"] }
 serde_yaml = "0.9"
 serde_json = "1"
+quick-xml = { version = "0.37", features = ["serialize"] }
 toml = "0.8"
 
 # Markdown

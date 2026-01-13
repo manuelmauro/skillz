@@ -29,6 +29,8 @@ Once installed, your AI assistant will be able to:
 - Create new skills using `skilo new`
 - Validate skills with `skilo lint`
 - Format SKILL.md files with `skilo fmt`
+- Extract skill metadata with `skilo read-properties`
+- Generate agent prompts with `skilo to-prompt`
 - Set up CI workflows for skill validation
 
 ## Installation
@@ -115,6 +117,47 @@ Formatting includes:
 ```bash
 # Run lint + format check (ideal for CI)
 skilo check .
+```
+
+### Read skill properties
+
+Extract skill metadata as JSON for programmatic use:
+
+```bash
+# Read properties from a single skill (outputs JSON object)
+skilo read-properties path/to/skill
+
+# Read properties from multiple skills (outputs JSON array)
+skilo read-properties path/to/skills/
+
+# Read from multiple paths
+skilo read-properties skill-a skill-b
+```
+
+Output includes: `name`, `description`, `license`, `compatibility`, `metadata`, `allowed_tools`, and `path`.
+
+### Generate agent prompts
+
+Generate XML for use in agent system prompts:
+
+```bash
+# Generate XML for a single skill
+skilo to-prompt path/to/skill
+
+# Generate XML for all skills in a directory
+skilo to-prompt path/to/skills/
+```
+
+Example output:
+
+```xml
+<available_skills>
+  <skill>
+    <name>my-skill</name>
+    <description>A brief description of what the skill does.</description>
+    <location>path/to/my-skill/SKILL.md</location>
+  </skill>
+</available_skills>
 ```
 
 ### Output formats

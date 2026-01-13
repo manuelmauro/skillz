@@ -19,13 +19,15 @@ cargo install --path .
 
 ## Commands
 
-| Command          | Description                      |
-|------------------|----------------------------------|
-| `skilo new`      | Create a new skill from template |
-| `skilo lint`     | Validate skills against spec     |
-| `skilo fmt`      | Format SKILL.md files            |
-| `skilo check`    | Run lint + format check          |
-| `skilo validate` | Alias for `lint --strict`        |
+| Command                 | Description                      |
+|-------------------------|----------------------------------|
+| `skilo new`             | Create a new skill from template |
+| `skilo lint`            | Validate skills against spec     |
+| `skilo fmt`             | Format SKILL.md files            |
+| `skilo check`           | Run lint + format check          |
+| `skilo validate`        | Alias for `lint --strict`        |
+| `skilo read-properties` | Output skill metadata as JSON    |
+| `skilo to-prompt`       | Generate XML for agent prompts   |
 
 ## Creating Skills
 
@@ -78,6 +80,46 @@ skilo fmt --check .
 
 # Show diff
 skilo fmt --diff .
+```
+
+## Reading Skill Properties
+
+Extract skill metadata as JSON:
+
+```bash
+# Single skill (outputs JSON object)
+skilo read-properties path/to/skill
+
+# Multiple skills (outputs JSON array)
+skilo read-properties path/to/skills/
+
+# Multiple paths
+skilo read-properties skill-a skill-b
+```
+
+Output fields: `name`, `description`, `license`, `compatibility`, `metadata`, `allowed_tools`, `path`.
+
+## Generating Agent Prompts
+
+Generate `<available_skills>` XML for agent system prompts:
+
+```bash
+# Single skill
+skilo to-prompt path/to/skill
+
+# All skills in directory
+skilo to-prompt path/to/skills/
+```
+
+Output:
+```xml
+<available_skills>
+  <skill>
+    <name>my-skill</name>
+    <description>What the skill does</description>
+    <location>path/to/my-skill/SKILL.md</location>
+  </skill>
+</available_skills>
 ```
 
 ## CI Integration

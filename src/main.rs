@@ -20,6 +20,10 @@ fn main() -> Result<()> {
             args.strict = true;
             commands::lint::run(args, &config, &cli)?
         }
+        Command::ReadProperties(args) => {
+            commands::read_properties::run(args.clone(), &config, &cli)?
+        }
+        Command::ToPrompt(args) => commands::to_prompt::run(args.clone(), &config, &cli)?,
     };
 
     std::process::exit(exit_code);

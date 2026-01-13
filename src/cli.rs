@@ -46,6 +46,21 @@ pub enum Command {
 
     /// Alias for lint --strict
     Validate(LintArgs),
+
+    /// Read skill properties as JSON
+    ///
+    /// Outputs skill metadata including name, description, license,
+    /// compatibility, metadata, and allowed_tools for one or more skills.
+    #[command(verbatim_doc_comment)]
+    ReadProperties(ReadPropertiesArgs),
+
+    /// Generate XML prompt for available skills
+    ///
+    /// Outputs an <available_skills> XML block suitable for use in
+    /// agent system prompts, containing skill names, descriptions,
+    /// and file locations.
+    #[command(verbatim_doc_comment)]
+    ToPrompt(ToPromptArgs),
 }
 
 #[derive(clap::Args, Clone)]
@@ -117,6 +132,20 @@ pub struct CheckArgs {
     /// Path to skill or directory containing skills
     #[arg(default_value = ".")]
     pub path: PathBuf,
+}
+
+#[derive(clap::Args, Clone)]
+pub struct ReadPropertiesArgs {
+    /// Paths to skills or directories containing skills
+    #[arg(default_value = ".")]
+    pub paths: Vec<PathBuf>,
+}
+
+#[derive(clap::Args, Clone)]
+pub struct ToPromptArgs {
+    /// Paths to skills or directories containing skills
+    #[arg(default_value = ".")]
+    pub paths: Vec<PathBuf>,
 }
 
 #[derive(ValueEnum, Clone, Copy, Default, Debug)]
