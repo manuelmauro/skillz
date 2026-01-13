@@ -2,6 +2,7 @@ pub mod discovery;
 pub mod formatter;
 pub mod frontmatter;
 pub mod manifest;
+pub mod rules;
 pub mod validator;
 
 pub use discovery::Discovery;

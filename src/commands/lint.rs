@@ -18,7 +18,7 @@ pub fn run(args: LintArgs, config: &Config, cli: &Cli) -> Result<i32, SkiloError
     }
 
     // Load and validate skills
-    let validator = Validator::new(config.lint.max_body_lines);
+    let validator = Validator::new(&config.lint);
     let mut results: Vec<(String, ValidationResult)> = Vec::new();
     let mut parse_errors = 0;
 

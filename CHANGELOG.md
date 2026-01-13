@@ -12,10 +12,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Renamed project from `skillz` to `skilo`
 - Renamed `SkillzError` to `SkiloError`
 - Renamed `SKILLZ_CONFIG` environment variable to `SKILO_CONFIG`
+- Refactored validator to use pluggable rule architecture
 
 ### Added
 
 - Table formatting support in output
+- Configurable lint rules via `[lint.rules]` in `.skilorc.toml`
+- Individual rules can now be enabled/disabled:
+  - `name_format` (E001), `name_length` (E002), `name_directory` (E003)
+  - `description_required` (E004), `description_length` (E005)
+  - `compatibility_length` (E006), `references_exist` (E009)
+  - `body_length` (W001) - set to number for threshold or `false` to disable
+  - `script_executable` (W002), `script_shebang` (W003)
 
 ## [0.1.0] - Initial Release
 

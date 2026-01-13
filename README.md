@@ -131,7 +131,18 @@ Create a `.skilorc.toml` file for project-specific settings:
 ```toml
 [lint]
 strict = true
-max_body_lines = 500
+
+[lint.rules]
+name_format = true           # E001: Name format validation
+name_length = 64             # E002: Name max length (false to disable)
+name_directory = true        # E003: Name matches directory
+description_required = true  # E004: Description not empty
+description_length = 1024    # E005: Description max length (false to disable)
+compatibility_length = 500   # E006: Compatibility max length (false to disable)
+references_exist = true      # E009: Referenced files exist
+body_length = 500            # W001: Max body lines (false to disable)
+script_executable = true     # W002: Scripts are executable
+script_shebang = true        # W003: Scripts have shebang
 
 [fmt]
 sort_frontmatter = true
@@ -142,6 +153,19 @@ format_tables = true
 default_license = "MIT"
 default_template = "hello-world"
 default_lang = "python"
+```
+
+### Configuring Rules
+
+Rules with thresholds accept `true` (default), `false` (disabled), or a number:
+
+```toml
+[lint.rules]
+name_directory = false       # Disable for monorepos
+script_executable = false    # Disable for Windows
+name_length = 128            # Custom max name length
+description_length = false   # Disable description length check
+body_length = 1000           # Custom max body lines
 ```
 
 ## CI Integration

@@ -1,5 +1,46 @@
-use serde::Deserialize;
+use serde::{Deserialize, Deserializer};
 use std::path::PathBuf;
+
+/// A configurable threshold that can be default, disabled, or a specific value.
+#[derive(Debug, Default, Clone, Copy, PartialEq, Eq)]
+pub enum Threshold {
+    /// Use the default value for this rule
+    #[default]
+    Default,
+    /// Rule is disabled
+    Disabled,
+    /// Rule is enabled with a specific value
+    Value(usize),
+}
+
+impl Threshold {
+    /// Resolve the threshold to an Option<usize> given a default value.
+    pub fn resolve(self, default: usize) -> Option<usize> {
+        match self {
+            Self::Default => Some(default),
+            Self::Disabled => None,
+            Self::Value(n) => Some(n),
+        }
+    }
+}
+
+fn deserialize_threshold<'de, D>(deserializer: D) -> Result<Threshold, D::Error>
+where
+    D: Deserializer<'de>,
+{
+    #[derive(Deserialize)]
+    #[serde(untagged)]
+    enum Value {
+        Bool(bool),
+        Number(usize),
+    }
+
+    match Value::deserialize(deserializer)? {
+        Value::Bool(false) => Ok(Threshold::Disabled),
+        Value::Bool(true) => Ok(Threshold::Default),
+        Value::Number(n) => Ok(Threshold::Value(n)),
+    }
+}
 
 #[derive(Debug, Default, Deserialize)]
 #[serde(default)]
@@ -9,18 +50,45 @@ pub struct Config {
     pub new: NewConfig,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Default, Deserialize)]
 #[serde(default)]
 pub struct LintConfig {
     pub strict: bool,
-    pub max_body_lines: usize,
+    pub rules: RulesConfig,
 }
 
-impl Default for LintConfig {
+#[derive(Debug, Deserialize)]
+#[serde(default)]
+pub struct RulesConfig {
+    pub name_format: bool,
+    #[serde(deserialize_with = "deserialize_threshold")]
+    pub name_length: Threshold,
+    pub name_directory: bool,
+    pub description_required: bool,
+    #[serde(deserialize_with = "deserialize_threshold")]
+    pub description_length: Threshold,
+    #[serde(deserialize_with = "deserialize_threshold")]
+    pub compatibility_length: Threshold,
+    pub references_exist: bool,
+    #[serde(deserialize_with = "deserialize_threshold")]
+    pub body_length: Threshold,
+    pub script_executable: bool,
+    pub script_shebang: bool,
+}
+
+impl Default for RulesConfig {
     fn default() -> Self {
         Self {
-            strict: false,
-            max_body_lines: 500,
+            name_format: true,
+            name_length: Threshold::Default,
+            name_directory: true,
+            description_required: true,
+            description_length: Threshold::Default,
+            compatibility_length: Threshold::Default,
+            references_exist: true,
+            body_length: Threshold::Default,
+            script_executable: true,
+            script_shebang: true,
         }
     }
 }
