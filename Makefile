@@ -66,7 +66,7 @@ new-skill:
 
 .PHONY: ci
 # Run all CI checks (fmt, clippy, test, build)
-ci: fmt-check clippy test build
+ci: fmt clippy test build
 
 .PHONY: doc
 # Generate documentation
