@@ -65,8 +65,8 @@ new-skill:
 	cargo run -- new $(NAME) --lang $(or $(LANG),python)
 
 .PHONY: ci
-# Run all CI checks (fmt, clippy, test, build)
-ci: fmt clippy test build
+# Run all CI checks (fmt, clippy, test, build, lint)
+ci: fmt clippy test build lint
 
 .PHONY: doc
 # Generate documentation
