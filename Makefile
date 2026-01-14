@@ -55,9 +55,14 @@ install:
 	cargo install --path .
 
 .PHONY: lint
-# Run skilo lint on test fixtures
+# Run skilo lint on skills
 lint:
 	cargo run -- lint .
+
+.PHONY: skill-fmt
+# Format skills
+skill-fmt:
+	cargo run -- fmt .
 
 .PHONY: new-skill
 # Create a new test skill (usage: make new-skill NAME=my-skill LANG=python)
@@ -65,8 +70,8 @@ new-skill:
 	cargo run -- new $(NAME) --lang $(or $(LANG),python)
 
 .PHONY: ci
-# Run all CI checks (fmt, clippy, test, build, lint)
-ci: fmt clippy test build lint
+# Run all CI checks (fmt, clippy, test, build, lint, skill-fmt)
+ci: fmt clippy test build lint skill-fmt
 
 .PHONY: doc
 # Generate documentation

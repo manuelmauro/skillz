@@ -16,43 +16,43 @@ Use conventional commit format with gitmoji for all commits in this project.
 
 ## Commit Types and Emojis
 
-| Type       | Emoji | Code            | Description                    |
-| ---------- | ----- | --------------- | ------------------------------ |
-| `feat`     | ✨     | `:sparkles:`    | New feature                    |
-| `fix`      | 🐛     | `:bug:`         | Bug fix                        |
-| `docs`     | 📝     | `:memo:`        | Documentation                  |
-| `style`    | 💄     | `:lipstick:`    | UI/style changes               |
-| `refactor` | ♻️     | `:recycle:`     | Code refactoring               |
-| `perf`     | ⚡     | `:zap:`         | Performance improvement        |
-| `test`     | ✅     | `:white_check_mark:` | Add/update tests          |
-| `build`    | 📦     | `:package:`     | Build system/dependencies      |
-| `ci`       | 👷     | `:construction_worker:` | CI configuration       |
-| `chore`    | 🔧     | `:wrench:`      | Maintenance tasks              |
-| `revert`   | ⏪     | `:rewind:`      | Revert changes                 |
+| Type       | Emoji  | Code                    | Description               |
+|------------|--------|-------------------------|---------------------------|
+| `feat`     | ✨      | `:sparkles:`            | New feature               |
+| `fix`      | 🐛      | `:bug:`                 | Bug fix                   |
+| `docs`     | 📝      | `:memo:`                | Documentation             |
+| `style`    | 💄      | `:lipstick:`            | UI/style changes          |
+| `refactor` | ♻️     | `:recycle:`             | Code refactoring          |
+| `perf`     | ⚡      | `:zap:`                 | Performance improvement   |
+| `test`     | ✅      | `:white_check_mark:`    | Add/update tests          |
+| `build`    | 📦      | `:package:`             | Build system/dependencies |
+| `ci`       | 👷      | `:construction_worker:` | CI configuration          |
+| `chore`    | 🔧      | `:wrench:`              | Maintenance tasks         |
+| `revert`   | ⏪      | `:rewind:`              | Revert changes            |
 
 ## Additional Emojis
 
-| Emoji | Code                  | Use case                       |
-| ----- | --------------------- | ------------------------------ |
-| 🎉     | `:tada:`              | Initial commit                 |
-| 🔥     | `:fire:`              | Remove code/files              |
-| 🚑     | `:ambulance:`         | Critical hotfix                |
-| 🔒     | `:lock:`              | Security fix                   |
-| 🚧     | `:construction:`      | Work in progress               |
-| ⬆️     | `:arrow_up:`          | Upgrade dependencies           |
-| ⬇️     | `:arrow_down:`        | Downgrade dependencies         |
-| 📌     | `:pushpin:`           | Pin dependencies               |
-| 🏷️     | `:label:`             | Add/update types               |
-| 💥     | `:boom:`              | Breaking changes               |
-| ✏️     | `:pencil2:`           | Fix typos                      |
-| 🚚     | `:truck:`             | Move/rename files              |
-| 🍱     | `:bento:`             | Add/update assets              |
-| ♿     | `:wheelchair:`        | Accessibility                  |
-| 🔊     | `:loud_sound:`        | Add logs                       |
-| 🔇     | `:mute:`              | Remove logs                    |
-| 🗃️     | `:card_file_box:`     | Database changes               |
-| 🤖     | `:robot:`             | AI/ML related                  |
-| 🧠     | `:brain:`             | AI/neural network changes      |
+| Emoji   | Code              | Use case                  |
+|---------|-------------------|---------------------------|
+| 🎉       | `:tada:`          | Initial commit            |
+| 🔥       | `:fire:`          | Remove code/files         |
+| 🚑       | `:ambulance:`     | Critical hotfix           |
+| 🔒       | `:lock:`          | Security fix              |
+| 🚧       | `:construction:`  | Work in progress          |
+| ⬆️      | `:arrow_up:`      | Upgrade dependencies      |
+| ⬇️      | `:arrow_down:`    | Downgrade dependencies    |
+| 📌       | `:pushpin:`       | Pin dependencies          |
+| 🏷️      | `:label:`         | Add/update types          |
+| 💥       | `:boom:`          | Breaking changes          |
+| ✏️      | `:pencil2:`       | Fix typos                 |
+| 🚚       | `:truck:`         | Move/rename files         |
+| 🍱       | `:bento:`         | Add/update assets         |
+| ♿       | `:wheelchair:`    | Accessibility             |
+| 🔊       | `:loud_sound:`    | Add logs                  |
+| 🔇       | `:mute:`          | Remove logs               |
+| 🗃️      | `:card_file_box:` | Database changes          |
+| 🤖       | `:robot:`         | AI/ML related             |
+| 🧠       | `:brain:`         | AI/neural network changes |
 
 ## Examples
 
