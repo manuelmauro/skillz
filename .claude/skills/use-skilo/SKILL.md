@@ -245,6 +245,47 @@ license: MIT
 Documentation goes here.
 ```
 
+## Best Practices
+
+### Description
+Describe **what** the skill does AND **when** to use it. Include keywords that help agents match user requests.
+
+**Good:**
+```yaml
+description: Extracts text and tables from PDF files, fills PDF forms, and merges multiple PDFs. Use when working with PDF documents or when the user mentions PDFs, forms, or document extraction.
+```
+
+**Bad:**
+```yaml
+description: Helps with PDFs.
+```
+
+### Body Content
+- Keep concise, move detailed content to `references/`
+- Include step-by-step instructions, examples, and edge cases
+
+### Progressive Disclosure
+1. **Metadata** - `name` and `description` loaded at startup for all skills
+2. **Instructions** - Full body loaded when skill activates
+3. **Resources** - `scripts/`, `references/`, `assets/` loaded only when needed
+
+### Scripts
+- Be self-contained or document dependencies
+- Include helpful error messages
+- Handle edge cases gracefully
+
+### References
+- Keep files focused (one file = one concept)
+- Use relative paths from skill root
+- Avoid deeply nested reference chains
+
+### Optional Fields
+Only include if truly needed:
+- `license` - Keep short, reference LICENSE file for details
+- `compatibility` - Specify environment requirements (e.g., `Requires git, docker`)
+- `metadata` - Key-value pairs with unique keys
+- `allowed-tools` - Space-delimited list of pre-approved tools
+
 ## Exit Codes
 
 | Code | Meaning                  |
