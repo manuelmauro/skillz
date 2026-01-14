@@ -1,6 +1,6 @@
 ---
 name: use-skilo
-description: Guide for using the skilo CLI tool for Agent Skills development
+description: Creates skills from templates, validates against specification, and formats SKILL.md files. Use when developing, linting, or formatting Agent Skills.
 ---
 
 # Use Skilo
@@ -148,7 +148,7 @@ jobs:
         uses: Swatinem/rust-cache@v2
 
       - name: Install skilo
-        run: cargo install skilo@0.3.0
+        run: cargo install skilo@0.4.0
 
       - name: Lint skills
         run: skilo lint .claude/skills/
