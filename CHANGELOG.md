@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.0] - 2026-01-19
+
 ### Added
 
 - `add` command to install skills from git repositories or local paths
@@ -15,15 +17,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `--list` option to list available skills without installing
 - `--yes` option for non-interactive/CI-friendly installation
 - `--branch` and `--tag` options for specifying git refs
+- `--agent` option to specify target agent for installation
+- `--output` option for custom install directory
 - Direct skill path support (`https://github.com/owner/repo/tree/main/skills/my-skill`)
 - New `[add]` configuration section in `.skilorc.toml`
 - Support for 14 AI coding agents: Claude Code, OpenCode, Codex, Cursor, Amp, Kilo Code, Roo Code, Goose, Gemini CLI, Antigravity, GitHub Copilot, Clawdbot, Droid, Windsurf
+- New `agent` module with `Agent` enum for managing agent-specific paths
 
 ### Dependencies
 
 - Added `git2` for git operations
 - Added `url` for URL parsing
 - Added `dialoguer` for interactive prompts
+- Added `tempfile` as runtime dependency
 
 ## [0.4.0] - 2026-01-14
 

@@ -148,7 +148,7 @@ jobs:
         uses: Swatinem/rust-cache@v2
 
       - name: Install skilo
-        run: cargo install skilo@0.4.0
+        run: cargo install skilo@0.5.0
 
       - name: Lint skills
         run: skilo lint .claude/skills/
