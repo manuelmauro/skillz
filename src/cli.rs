@@ -103,6 +103,68 @@ pub struct AddArgs {
     /// Specify git tag
     #[arg(long, short = 't')]
     pub tag: Option<String>,
+
+    /// Target agent (determines install directory)
+    #[arg(long, short, value_enum)]
+    pub agent: Option<Agent>,
+
+    /// Custom output directory
+    #[arg(long, short, overrides_with = "agent")]
+    pub output: Option<std::path::PathBuf>,
+}
+
+/// Supported AI coding agents (CLI enum).
+#[derive(clap::ValueEnum, Clone, Copy, Debug)]
+pub enum Agent {
+    /// OpenCode
+    OpenCode,
+    /// Claude Code
+    Claude,
+    /// Codex
+    Codex,
+    /// Cursor
+    Cursor,
+    /// Amp
+    Amp,
+    /// Kilo Code
+    KiloCode,
+    /// Roo Code
+    RooCode,
+    /// Goose
+    Goose,
+    /// Gemini CLI
+    Gemini,
+    /// Antigravity
+    Antigravity,
+    /// GitHub Copilot
+    Copilot,
+    /// Clawdbot
+    Clawdbot,
+    /// Droid
+    Droid,
+    /// Windsurf
+    Windsurf,
+}
+
+impl From<Agent> for crate::agent::Agent {
+    fn from(agent: Agent) -> Self {
+        match agent {
+            Agent::OpenCode => Self::OpenCode,
+            Agent::Claude => Self::Claude,
+            Agent::Codex => Self::Codex,
+            Agent::Cursor => Self::Cursor,
+            Agent::Amp => Self::Amp,
+            Agent::KiloCode => Self::KiloCode,
+            Agent::RooCode => Self::RooCode,
+            Agent::Goose => Self::Goose,
+            Agent::Gemini => Self::Gemini,
+            Agent::Antigravity => Self::Antigravity,
+            Agent::Copilot => Self::Copilot,
+            Agent::Clawdbot => Self::Clawdbot,
+            Agent::Droid => Self::Droid,
+            Agent::Windsurf => Self::Windsurf,
+        }
+    }
 }
 
 /// Arguments for the `new` command.

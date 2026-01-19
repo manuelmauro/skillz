@@ -31,8 +31,19 @@ struct SkillInfo {
 
 /// Run the add command.
 pub fn run(args: AddArgs, config: &Config, cli: &Cli) -> Result<i32, SkiloError> {
+    use crate::agent::Agent;
+
     let formatter = get_formatter(cli.format, cli.quiet);
-    let install_dir = PathBuf::from(config.add.default_agent.skills_dir());
+
+    // Determine install directory: --output > --agent > config default
+    let install_dir = if let Some(ref output) = args.output {
+        output.clone()
+    } else if let Some(cli_agent) = args.agent {
+        let agent: Agent = cli_agent.into();
+        PathBuf::from(agent.skills_dir())
+    } else {
+        PathBuf::from(config.add.default_agent.skills_dir())
+    };
 
     // Parse the source
     let source = Source::parse_with_options(&args.source, args.branch.clone(), args.tag.clone())?;
@@ -304,13 +315,27 @@ fn print_skill_list(skills: &[SkillInfo]) {
             format!(" {}", "(invalid)".yellow())
         };
 
+        let description = truncate_description(&skill.description, 50);
+
         println!(
             "  {:<width$}  {}{}",
             skill.name.cyan(),
-            skill.description,
+            description,
             status,
             width = max_name_len
         );
+    }
+}
+
+/// Truncate a description to a maximum length, adding ellipsis if needed.
+fn truncate_description(s: &str, max_len: usize) -> String {
+    // Take first sentence or truncate
+    let first_sentence = s.split(". ").next().unwrap_or(s);
+
+    if first_sentence.len() <= max_len {
+        first_sentence.to_string()
+    } else {
+        format!("{}...", &first_sentence[..max_len.saturating_sub(3)])
     }
 }
 

@@ -25,3 +25,8 @@ format_tables = true
 default_license = "MIT"
 default_template = "hello-world"
 default_lang = "bash"
+
+[add]
+default_agent = "claude"
+confirm = true
+validate = true
