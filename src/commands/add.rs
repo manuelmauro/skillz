@@ -130,17 +130,25 @@ pub fn run(args: AddArgs, config: &Config, cli: &Cli) -> Result<i32, SkiloError>
                 io::stdout().flush().ok();
             }
 
-            // Fetch the repository
+            // Fetch the repository (uses cache when possible)
             let fetch_result = fetch(&git_source)?;
 
             if !cli.quiet {
-                println!(" {}", "done".green());
+                if fetch_result.from_cache {
+                    if let Some(ref commit) = fetch_result.commit {
+                        println!(" {} ({})", "done".green(), commit.dimmed());
+                    } else {
+                        println!(" {}", "done".green());
+                    }
+                } else {
+                    println!(" {}", "done".green());
+                }
             }
 
             (
                 fetch_result.root.clone(),
                 display_name,
-                Some(fetch_result.temp_dir),
+                fetch_result.temp_dir,
             )
         }
         Source::Local(path) => {

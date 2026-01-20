@@ -4,6 +4,7 @@
 //! [Agent Skills](https://agentskills.io/specification).
 
 pub mod agent;
+pub mod cache;
 pub mod cli;
 pub mod commands;
 pub mod config;

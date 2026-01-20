@@ -4,6 +4,8 @@
 pub mod add;
 /// The `agents` command implementation.
 pub mod agents;
+/// The `cache` command implementation.
+pub mod cache;
 /// The `check` command implementation.
 pub mod check;
 /// The `fmt` command implementation.

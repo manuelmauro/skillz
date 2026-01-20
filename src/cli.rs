@@ -89,6 +89,13 @@ pub enum Command {
     /// along with their skill counts and feature support.
     #[command(verbatim_doc_comment)]
     Agents(AgentsArgs),
+
+    /// Manage the git cache
+    ///
+    /// Skilo caches git repositories in ~/.skilo/git/ to speed up
+    /// repeated installs and enable offline usage.
+    #[command(verbatim_doc_comment)]
+    Cache(CacheArgs),
 }
 
 /// Arguments for the `add` command.
@@ -366,4 +373,30 @@ pub struct AgentsArgs {
     /// Show verbose output (feature support matrix)
     #[arg(long, short)]
     pub verbose: bool,
+}
+
+/// Arguments for the `cache` command.
+#[derive(clap::Args, Clone)]
+pub struct CacheArgs {
+    /// Cache subcommand
+    #[command(subcommand)]
+    pub command: Option<CacheCommand>,
+}
+
+/// Cache subcommands.
+#[derive(Subcommand, Clone)]
+pub enum CacheCommand {
+    /// Show cache location
+    Path,
+
+    /// Clean old checkouts
+    Clean {
+        /// Remove all cached data (db + checkouts)
+        #[arg(long)]
+        all: bool,
+
+        /// Maximum age in days for checkouts (default: 30)
+        #[arg(long, default_value = "30")]
+        max_age: u32,
+    },
 }
