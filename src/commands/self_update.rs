@@ -70,10 +70,6 @@ fn detect_target() -> Option<&'static str> {
     {
         Some("aarch64-apple-darwin")
     }
-    #[cfg(all(target_os = "macos", target_arch = "x86_64"))]
-    {
-        Some("x86_64-apple-darwin")
-    }
     #[cfg(all(target_os = "linux", target_arch = "x86_64"))]
     {
         Some("x86_64-unknown-linux-gnu")
@@ -84,7 +80,6 @@ fn detect_target() -> Option<&'static str> {
     }
     #[cfg(not(any(
         all(target_os = "macos", target_arch = "aarch64"),
-        all(target_os = "macos", target_arch = "x86_64"),
         all(target_os = "linux", target_arch = "x86_64"),
         all(target_os = "windows", target_arch = "x86_64"),
     )))]
@@ -431,7 +426,6 @@ mod tests {
         let target = detect_target();
         #[cfg(any(
             all(target_os = "macos", target_arch = "aarch64"),
-            all(target_os = "macos", target_arch = "x86_64"),
             all(target_os = "linux", target_arch = "x86_64"),
             all(target_os = "windows", target_arch = "x86_64"),
         ))]
