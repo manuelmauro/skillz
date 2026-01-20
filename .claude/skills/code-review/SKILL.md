@@ -1,6 +1,7 @@
 ---
 name: code-review
 description: Review code changes for quality, correctness, and style
+license: MIT OR Apache-2.0
 ---
 
 # Code Review

@@ -1,6 +1,7 @@
 ---
 name: add-lint-rule
 description: Add a new lint rule to the validator
+license: MIT OR Apache-2.0
 ---
 
 # Add Lint Rule

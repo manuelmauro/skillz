@@ -1,6 +1,7 @@
 ---
 name: fix-clippy
 description: Identify and fix Clippy warnings in Rust code
+license: MIT OR Apache-2.0
 ---
 
 # Fix Clippy

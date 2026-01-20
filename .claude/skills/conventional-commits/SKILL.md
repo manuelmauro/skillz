@@ -1,7 +1,7 @@
 ---
 name: conventional-commits
 description: Guide for writing conventional commits with gitmoji
-license: MIT
+license: MIT OR Apache-2.0
 ---
 
 # Conventional Commits

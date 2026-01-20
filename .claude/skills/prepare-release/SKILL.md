@@ -1,6 +1,7 @@
 ---
 name: prepare-release
 description: Prepare a new version release with changelog and version bumps
+license: MIT OR Apache-2.0
 ---
 
 # Prepare Release

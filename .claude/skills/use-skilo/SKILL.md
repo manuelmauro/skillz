@@ -1,6 +1,7 @@
 ---
 name: use-skilo
 description: Creates skills from templates, validates against specification, and formats SKILL.md files. Use when developing, linting, or formatting Agent Skills.
+license: MIT OR Apache-2.0
 ---
 
 # Use Skilo

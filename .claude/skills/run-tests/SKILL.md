@@ -1,6 +1,7 @@
 ---
 name: run-tests
 description: Run the test suite and report results
+license: MIT OR Apache-2.0
 ---
 
 # Run Tests
