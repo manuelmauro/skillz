@@ -43,6 +43,7 @@ Once installed, your AI assistant will be able to:
 - Create new skills using `skilo new`
 - List installed skills with `skilo list`
 - Detect installed agents with `skilo agents`
+- Manage git cache with `skilo cache`
 - Validate skills with `skilo lint`
 - Format SKILL.md files with `skilo fmt`
 - Extract skill metadata with `skilo read-properties`
@@ -214,6 +215,43 @@ Global agents:
   Claude Code    ~/.claude/skills/  (2 skills)
 ```
 
+### Manage git cache
+
+Skilo caches git repositories for faster repeated installs and offline usage:
+
+```bash
+# Show cache status and disk usage
+skilo cache
+
+# Show cache directory path
+skilo cache path
+
+# Clean checkouts older than 30 days (keeps bare repos for fast re-checkout)
+skilo cache clean
+
+# Clean checkouts older than 7 days
+skilo cache clean --max-age 7
+
+# Remove entire cache (bare repos + checkouts)
+skilo cache clean --all
+```
+
+Example output:
+
+```
+Cache directory: /home/user/.skilo/git
+
+  db/: 2 repositories, 1.2 MB
+    anthropics-skills
+    manuelmauro-moonbeam-skills
+
+  checkouts/: 3 checkouts, 4.5 MB
+    anthropics-skills-a1b2c3d (2 days ago)
+    manuelmauro-moonbeam-skills-0c331b1 (just now)
+
+Total: 5.7 MB
+```
+
 ### Read skill properties
 
 Extract skill metadata as JSON for programmatic use:
@@ -361,6 +399,15 @@ The `default_agent` option supports the following AI coding assistants:
 | Droid          | `droid`       | `.factory/skills/`  | `~/.factory/skills/`            |
 | Windsurf       | `windsurf`    | `.windsurf/skills/` | `~/.codeium/windsurf/skills/`   |
 
+## Environment Variables
+
+| Variable       | Description                                      |
+| -------------- | ------------------------------------------------ |
+| `SKILO_CONFIG` | Path to configuration file                       |
+| `SKILO_HOME`   | Override skilo home directory (default: `~/.skilo/`) |
+| `SKILO_CACHE`  | Override git cache directory (default: `~/.skilo/git/`) |
+| `SKILO_OFFLINE`| Set to `1` to use cached repositories only (no network) |
+
 ## CI Integration
 
 Add skilo validation to your GitHub Actions workflow:
@@ -384,7 +431,7 @@ jobs:
         uses: dtolnay/rust-toolchain@stable
 
       - name: Install skilo
-        run: cargo install skilo@0.5.0
+        run: cargo install skilo@0.6.0
 
       - name: Lint skills
         run: skilo lint . --strict

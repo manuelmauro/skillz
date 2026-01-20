@@ -7,8 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.6.0] - 2026-01-20
+
 ### Added
 
+- Git repository caching for faster repeated installs
+  - Bare repos cached in `~/.skilo/git/db/`
+  - Checkouts cached in `~/.skilo/git/checkouts/`
+  - Offline mode via `SKILO_OFFLINE=1` environment variable
+- `cache` command to manage git cache
+  - `skilo cache` shows cache status and disk usage
+  - `skilo cache path` shows cache directory location
+  - `skilo cache clean` removes old checkouts (default: 30 days)
+  - `skilo cache clean --all` removes entire cache
+- Environment variables for cache configuration
+  - `SKILO_HOME` to override `~/.skilo/`
+  - `SKILO_CACHE` to override `~/.skilo/git/`
 - Multi-agent support: install skills to multiple agents simultaneously
   - `--agent all` to install to all detected agents
   - Multiple `--agent` flags: `--agent claude --agent cursor`
@@ -25,7 +39,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Agent feature matrix: track which agents support `context:fork`, hooks, `allowed-tools`
 - Compatibility warnings when installing skills with features not supported by target agent
 - New `scope` module for project/global path resolution
-- New configuration sections: `[agents]` and `[install]`
+
+### Changed
+
+- `AgentSelection` enum replaces `Option<Agent>` for clearer semantics
 
 ### Dependencies
 
