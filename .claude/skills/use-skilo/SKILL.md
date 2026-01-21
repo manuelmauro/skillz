@@ -116,18 +116,18 @@ Files in `references/` are loaded on-demand:
 
 Skilo enforces these rules (configure in `.skilorc.toml`):
 
-| Code | Rule                   | Default   |
-|------|------------------------|-----------|
-| E001 | `name_format`          | enabled   |
-| E002 | `name_length`          | 64 chars  |
-| E003 | `name_directory`       | enabled   |
-| E004 | `description_required` | enabled   |
-| E005 | `description_length`   | 1024 chars|
-| E006 | `compatibility_length` | 500 chars |
-| E009 | `references_exist`     | enabled   |
-| W001 | `body_length`          | 500 lines |
-| W002 | `script_executable`    | enabled   |
-| W003 | `script_shebang`       | enabled   |
+| Code | Rule                   | Default    |
+|------|------------------------|------------|
+| E001 | `name_format`          | enabled    |
+| E002 | `name_length`          | 64 chars   |
+| E003 | `name_directory`       | enabled    |
+| E004 | `description_required` | enabled    |
+| E005 | `description_length`   | 1024 chars |
+| E006 | `compatibility_length` | 500 chars  |
+| E009 | `references_exist`     | enabled    |
+| W001 | `body_length`          | 500 lines  |
+| W002 | `script_executable`    | enabled    |
+| W003 | `script_shebang`       | enabled    |
 
 ## CI Integration
 
