@@ -1,6 +1,6 @@
 ---
 name: use-skilo
-description: Creates skills from templates, validates against specification, and formats SKILL.md files. Use when developing, linting, or formatting Agent Skills.
+description: Creates, installs, validates, and formats Agent Skills. Use when developing skills from templates, installing skills from git repositories, linting against the specification, or managing skills across AI coding agents.
 license: MIT OR Apache-2.0
 ---
 
@@ -11,212 +11,30 @@ Skilo is a CLI tool for developing [Agent Skills](https://agentskills.io/specifi
 ## Installation
 
 ```bash
-# Quick install (recommended)
 curl -sSfL https://raw.githubusercontent.com/manuelmauro/skilo/main/install.sh | sh
-
-# From crates.io
-cargo install skilo
-
-# From source
-cargo install --path .
 ```
 
-## Commands
-
-| Command                 | Description                      |
-|-------------------------|----------------------------------|
-| `skilo new`             | Create a new skill from template |
-| `skilo lint`            | Validate skills against spec     |
-| `skilo fmt`             | Format SKILL.md files            |
-| `skilo check`           | Run lint + format check          |
-| `skilo validate`        | Alias for `lint --strict`        |
-| `skilo read-properties` | Output skill metadata as JSON    |
-| `skilo to-prompt`       | Generate XML for agent prompts   |
-
-## Creating Skills
+## Quick Start
 
 ```bash
-# Basic usage
-skilo new my-skill
-
-# With options
-skilo new my-skill \
-  --description "What the skill does" \
-  --lang python \
-  --license MIT \
-  --template hello-world
-
-# Output to specific directory
-skilo new my-skill -o ./skills/
+skilo new my-skill        # Create from template
+skilo add owner/repo      # Install from git
+skilo lint .              # Validate against spec
+skilo fmt .               # Format SKILL.md files
 ```
 
-**Templates:** `hello-world` (default), `minimal`, `full`, `script-based`
+Run `skilo -h` for all commands and options.
 
-**Languages:** `python`, `bash`, `javascript`, `typescript`
+## ALWAYS Validate Skills
 
-## Validating Skills
+**Run `skilo lint` and `skilo fmt` before committing any skill changes.** These commands enforce the [Agent Skills Specification](https://agentskills.io/specification) and catch common issues.
 
 ```bash
-# Lint a single skill
-skilo lint path/to/skill
+# Validate and format in one command
+skilo check .
 
-# Lint all skills in directory
-skilo lint .
-
-# Strict mode (warnings as errors)
-skilo lint --strict .
-
-# JSON output
-skilo lint --format json .
-
-# SARIF output (for CI integrations)
-skilo lint --format sarif . > results.sarif
-```
-
-## Formatting Skills
-
-```bash
-# Format in place
-skilo fmt .
-
-# Check only (for CI)
-skilo fmt --check .
-
-# Show diff
-skilo fmt --diff .
-```
-
-## Reading Skill Properties
-
-Extract skill metadata as JSON:
-
-```bash
-# Single skill (outputs JSON object)
-skilo read-properties path/to/skill
-
-# Multiple skills (outputs JSON array)
-skilo read-properties path/to/skills/
-
-# Multiple paths
-skilo read-properties skill-a skill-b
-```
-
-Output fields: `name`, `description`, `license`, `compatibility`, `metadata`, `allowed_tools`, `path`.
-
-## Generating Agent Prompts
-
-Generate `<available_skills>` XML for agent system prompts:
-
-```bash
-# Single skill
-skilo to-prompt path/to/skill
-
-# All skills in directory
-skilo to-prompt path/to/skills/
-```
-
-Output:
-```xml
-<available_skills>
-  <skill>
-    <name>my-skill</name>
-    <description>What the skill does</description>
-    <location>path/to/my-skill/SKILL.md</location>
-  </skill>
-</available_skills>
-```
-
-## CI Integration
-
-### GitHub Actions
-
-```yaml
-name: Validate Skills
-
-on:
-  push:
-    paths: ['.claude/skills/**']
-  pull_request:
-    paths: ['.claude/skills/**']
-
-jobs:
-  validate:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Install skilo
-        run: curl -sSfL https://raw.githubusercontent.com/manuelmauro/skilo/main/install.sh | sh
-
-      - name: Lint skills
-        run: skilo lint .claude/skills/
-
-      - name: Check formatting
-        run: skilo fmt --check .claude/skills/
-```
-
-### SARIF Integration
-
-Upload results to GitHub Code Scanning:
-
-```yaml
-- name: Run skilo lint
-  run: skilo lint --format sarif . > results.sarif
-  continue-on-error: true
-
-- name: Upload SARIF
-  uses: github/codeql-action/upload-sarif@v3
-  with:
-    sarif_file: results.sarif
-```
-
-### Quick CI Check
-
-Use `skilo check` to run both lint and format check in one command:
-
-```yaml
-- name: Validate skills
-  run: skilo check --strict .claude/skills/
-```
-
-## Configuration
-
-Create `.skilorc.toml` in your project:
-
-```toml
-[lint]
-strict = false
-
-[lint.rules]
-name_format = true        # E001
-name_length = 64          # E002 (threshold)
-name_directory = true     # E003
-description_required = true  # E004
-description_length = 1024    # E005 (threshold)
-compatibility_length = 500   # E006 (threshold)
-references_exist = true      # E009
-body_length = 500            # W001 (threshold)
-script_executable = true     # W002
-script_shebang = true        # W003
-
-[fmt]
-sort_frontmatter = true
-indent_size = 2
-format_tables = true
-
-[new]
-default_license = "MIT"
-default_template = "hello-world"
-default_lang = "bash"
-```
-
-### Disabling Rules
-
-```toml
-[lint.rules]
-name_directory = false     # Disable rule
-body_length = false        # Disable threshold rule
-description_length = 2048  # Custom threshold
+# Strict mode for CI (warnings become errors)
+skilo check --strict .
 ```
 
 ## Skill Structure
@@ -224,71 +42,98 @@ description_length = 2048  # Custom threshold
 ```
 my-skill/
 ├── SKILL.md        # Required: manifest with YAML frontmatter
-├── scripts/        # Optional: executable scripts
-├── references/     # Optional: additional docs
+├── scripts/        # Optional: executable code
+├── references/     # Optional: additional docs (loaded on-demand)
 └── assets/         # Optional: static resources
 ```
 
-## SKILL.md Format
+## Frontmatter Requirements
 
-```markdown
----
-name: my-skill
-description: What the skill does
-license: MIT
----
+### Required Fields
 
-# My Skill
+**`name`** (1-64 characters)
+- Lowercase alphanumeric and hyphens only (`a-z`, `0-9`, `-`)
+- Must NOT start/end with `-` or contain `--`
+- Must match parent directory name
 
-Documentation goes here.
-```
+**`description`** (1-1024 characters)
+- Describe WHAT the skill does AND WHEN to use it
+- Include keywords that help agents match user requests
+
+### Optional Fields
+
+- **`license`** - Keep short, reference LICENSE file for details
+- **`compatibility`** (max 500 chars) - Environment requirements (e.g., `Requires git, docker`)
+- **`metadata`** - Key-value pairs for custom properties
+- **`allowed-tools`** - Space-delimited list of pre-approved tools (experimental)
 
 ## Best Practices
 
-### Description
-Describe **what** the skill does AND **when** to use it. Include keywords that help agents match user requests.
+### Write Effective Descriptions
 
-**Good:**
+The description is how agents decide when to activate your skill. Be specific.
+
 ```yaml
+# Good - specific, keyword-rich
 description: Extracts text and tables from PDF files, fills PDF forms, and merges multiple PDFs. Use when working with PDF documents or when the user mentions PDFs, forms, or document extraction.
-```
 
-**Bad:**
-```yaml
+# Bad - vague, no activation cues
 description: Helps with PDFs.
 ```
 
-### Body Content
-- Keep concise, move detailed content to `references/`
-- Include step-by-step instructions, examples, and edge cases
+### Keep Body Content Concise
 
-### Progressive Disclosure
-1. **Metadata** - `name` and `description` loaded at startup for all skills
-2. **Instructions** - Full body loaded when skill activates
-3. **Resources** - `scripts/`, `references/`, `assets/` loaded only when needed
+The entire `SKILL.md` body loads when the skill activates. Keep it under 500 lines.
 
-### Scripts
-- Be self-contained or document dependencies
+- Include step-by-step instructions
+- Add examples of inputs and outputs
+- Cover common edge cases
+- Move detailed material to `references/`
+
+### Use Progressive Disclosure
+
+Structure skills to minimize context usage:
+
+1. **Metadata** (~100 tokens) - `name` + `description` loaded at startup for all skills
+2. **Instructions** (<5000 tokens) - Full body loaded when skill activates
+3. **Resources** (on-demand) - `scripts/`, `references/`, `assets/` loaded only when needed
+
+### Write Self-Contained Scripts
+
+Scripts in `scripts/` should:
+- Be self-contained or clearly document dependencies
 - Include helpful error messages
 - Handle edge cases gracefully
 
-### References
+### Organize References Effectively
+
+Files in `references/` are loaded on-demand:
 - Keep files focused (one file = one concept)
 - Use relative paths from skill root
 - Avoid deeply nested reference chains
 
-### Optional Fields
-Only include if truly needed:
-- `license` - Keep short, reference LICENSE file for details
-- `compatibility` - Specify environment requirements (e.g., `Requires git, docker`)
-- `metadata` - Key-value pairs with unique keys
-- `allowed-tools` - Space-delimited list of pre-approved tools
+## Lint Rules
 
-## Exit Codes
+Skilo enforces these rules (configure in `.skilorc.toml`):
 
-| Code | Meaning                  |
-|------|--------------------------|
-| 0    | Success                  |
-| 1    | Validation errors found  |
-| 2    | Invalid arguments/config |
-| 3    | I/O error                |
+| Code | Rule                   | Default   |
+|------|------------------------|-----------|
+| E001 | `name_format`          | enabled   |
+| E002 | `name_length`          | 64 chars  |
+| E003 | `name_directory`       | enabled   |
+| E004 | `description_required` | enabled   |
+| E005 | `description_length`   | 1024 chars|
+| E006 | `compatibility_length` | 500 chars |
+| E009 | `references_exist`     | enabled   |
+| W001 | `body_length`          | 500 lines |
+| W002 | `script_executable`    | enabled   |
+| W003 | `script_shebang`       | enabled   |
+
+## CI Integration
+
+```yaml
+- name: Validate skills
+  run: |
+    curl -sSfL https://raw.githubusercontent.com/manuelmauro/skilo/main/install.sh | sh
+    skilo check --strict .claude/skills/
+```
