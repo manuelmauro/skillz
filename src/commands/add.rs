@@ -245,7 +245,6 @@ pub fn run(args: AddArgs, config: &Config, cli: &Cli) -> Result<i32, SkiloError>
 
             if !Confirm::new()
                 .with_prompt(prompt)
-                .default(false)
                 .interact()
                 .map_err(|_| SkiloError::Cancelled)?
             {
@@ -268,7 +267,6 @@ pub fn run(args: AddArgs, config: &Config, cli: &Cli) -> Result<i32, SkiloError>
 
             if !Confirm::new()
                 .with_prompt(prompt)
-                .default(false)
                 .interact()
                 .map_err(|_| SkiloError::Cancelled)?
             {
@@ -525,7 +523,6 @@ fn install_skills(
                 let prompt = format!("Skill '{}' already exists. Overwrite?", skill.name);
                 if !Confirm::new()
                     .with_prompt(prompt)
-                    .default(false)
                     .interact()
                     .map_err(|_| SkiloError::Cancelled)?
                 {
