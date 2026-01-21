@@ -88,9 +88,9 @@ fn resolve_output_dir(args: &NewArgs, config: &Config) -> Result<PathBuf, SkiloE
     };
 
     // Determine agent
-    let agent = if let Some(ref cli_agent) = args.agent {
+    let agent: Option<crate::agent::Agent> = if let Some(ref cli_agent) = args.agent {
         match cli_agent.to_selection() {
-            crate::cli::AgentSelection::Single(a) => a,
+            crate::cli::AgentSelection::Single(a) => Some(a),
             crate::cli::AgentSelection::All => config.add.default_agent,
         }
     } else {
@@ -98,6 +98,20 @@ fn resolve_output_dir(args: &NewArgs, config: &Config) -> Result<PathBuf, SkiloE
     };
 
     // Ensure skills directory exists and return it
-    ensure_skills_dir(agent, scope, &project_root)
-        .map_err(|e| SkiloError::Config(format!("Failed to create skills directory: {}", e)))
+    match agent {
+        Some(agent) => ensure_skills_dir(agent, scope, &project_root)
+            .map_err(|e| SkiloError::Config(format!("Failed to create skills directory: {}", e))),
+        None => {
+            if args.global {
+                return Err(SkiloError::Config(
+                    "Global installation requires an agent (use --agent)".to_string(),
+                ));
+            }
+            let skills_dir = project_root.join("skills");
+            std::fs::create_dir_all(&skills_dir).map_err(|e| {
+                SkiloError::Config(format!("Failed to create skills directory: {}", e))
+            })?;
+            Ok(skills_dir)
+        }
+    }
 }

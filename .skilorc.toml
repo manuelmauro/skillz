@@ -27,6 +27,6 @@ default_template = "hello-world"
 default_lang = "bash"
 
 [add]
-default_agent = "claude"
+# default_agent = "claude"  # Uncomment to default to a specific agent
 confirm = true
 validate = true

@@ -56,8 +56,8 @@ pub struct InstalledSkill {
     pub description: String,
     /// Path to the skill directory.
     pub path: PathBuf,
-    /// The agent this skill is installed for.
-    pub agent: Agent,
+    /// The agent this skill is installed for (None if using generic ./skills/).
+    pub agent: Option<Agent>,
     /// Installation scope.
     pub scope: Scope,
 }
@@ -68,13 +68,22 @@ pub fn list_skills(agent: Agent, scope: Scope, project_root: &Path) -> Vec<Insta
         return Vec::new();
     };
 
+    list_skills_from_path(&skills_dir, Some(agent), scope)
+}
+
+/// List installed skills from a specific directory path.
+pub fn list_skills_from_path(
+    skills_dir: &Path,
+    agent: Option<Agent>,
+    scope: Scope,
+) -> Vec<InstalledSkill> {
     if !skills_dir.exists() {
         return Vec::new();
     }
 
     let mut skills = Vec::new();
 
-    if let Ok(entries) = std::fs::read_dir(&skills_dir) {
+    if let Ok(entries) = std::fs::read_dir(skills_dir) {
         for entry in entries.filter_map(|e| e.ok()) {
             let path = entry.path();
             if path.is_dir() {

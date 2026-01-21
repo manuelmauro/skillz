@@ -20,11 +20,18 @@ pub fn run(args: AgentsArgs, config: &Config, cli: &Cli) -> Result<i32, SkiloErr
 
     if detected.is_empty() {
         formatter.format_message("No agents detected.");
-        formatter.format_message(&format!(
-            "\nDefault agent: {} ({})",
-            config.add.default_agent.display_name(),
-            config.add.default_agent.skills_dir()
-        ));
+        match config.add.default_agent {
+            Some(agent) => {
+                formatter.format_message(&format!(
+                    "\nDefault agent: {} ({})",
+                    agent.display_name(),
+                    agent.skills_dir()
+                ));
+            }
+            None => {
+                formatter.format_message("\nDefault: ./skills/ (no agent configured)");
+            }
+        }
         return Ok(0);
     }
 

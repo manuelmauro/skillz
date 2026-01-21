@@ -34,7 +34,7 @@ struct SkillInfo {
 
 /// Target information for skill installation.
 struct InstallTarget {
-    agent: Agent,
+    agent: Option<Agent>,
     path: PathBuf,
     scope: Scope,
 }
@@ -51,14 +51,14 @@ fn resolve_targets(args: &AddArgs, config: &Config) -> Result<Vec<InstallTarget>
     // If --output is specified, use it directly
     if let Some(ref output) = args.output {
         return Ok(vec![InstallTarget {
-            agent: config.add.default_agent,
+            agent: None,
             path: output.clone(),
             scope: Scope::Project, // Custom path is treated as project scope
         }]);
     }
 
     // Resolve agents from CLI args
-    let agents: Vec<Agent> = if let Some(ref cli_agents) = args.agent {
+    let agents: Option<Vec<Agent>> = if let Some(ref cli_agents) = args.agent {
         let mut resolved = Vec::new();
         for cli_agent in cli_agents {
             match cli_agent.to_selection() {
@@ -70,8 +70,10 @@ fn resolve_targets(args: &AddArgs, config: &Config) -> Result<Vec<InstallTarget>
                         Agent::detect_project(&project_root)
                     };
                     if detected.is_empty() {
-                        // Fall back to default agent if none detected
-                        resolved.push(config.add.default_agent);
+                        // Fall back to default agent if configured, otherwise use ./skills/
+                        if let Some(default_agent) = config.add.default_agent {
+                            resolved.push(default_agent);
+                        }
                     } else {
                         resolved.extend(detected);
                     }
@@ -84,22 +86,47 @@ fn resolve_targets(args: &AddArgs, config: &Config) -> Result<Vec<InstallTarget>
         // Deduplicate
         let mut seen = HashSet::new();
         resolved.retain(|a| seen.insert(*a));
-        resolved
+        if resolved.is_empty() {
+            None
+        } else {
+            Some(resolved)
+        }
     } else {
-        vec![config.add.default_agent]
+        config.add.default_agent.map(|a| vec![a])
     };
 
     // Build targets
-    let targets: Vec<InstallTarget> = agents
-        .into_iter()
-        .filter_map(|agent| {
-            let path = match scope {
-                Scope::Global => agent.resolve_global_skills_dir()?,
-                Scope::Project => Some(agent.resolve_project_skills_dir(&project_root))?,
+    let targets: Vec<InstallTarget> = match agents {
+        Some(agent_list) => agent_list
+            .into_iter()
+            .filter_map(|agent| {
+                let path = match scope {
+                    Scope::Global => agent.resolve_global_skills_dir()?,
+                    Scope::Project => Some(agent.resolve_project_skills_dir(&project_root))?,
+                };
+                Some(InstallTarget {
+                    agent: Some(agent),
+                    path,
+                    scope,
+                })
+            })
+            .collect(),
+        None => {
+            // No agent specified - install to ./skills/ in current directory
+            let path = if args.global {
+                return Err(SkiloError::Config(
+                    "Global installation requires an agent (use --agent)".to_string(),
+                ));
+            } else {
+                project_root.join("skills")
             };
-            Some(InstallTarget { agent, path, scope })
-        })
-        .collect();
+            vec![InstallTarget {
+                agent: None,
+                path,
+                scope: Scope::Project,
+            }]
+        }
+    };
 
     if targets.is_empty() {
         return Err(SkiloError::Config(
@@ -190,12 +217,15 @@ pub fn run(args: AddArgs, config: &Config, cli: &Cli) -> Result<i32, SkiloError>
         .iter()
         .map(|t| {
             let scope_str = if t.scope.is_global() { " (global)" } else { "" };
-            format!(
-                "{}{}: {}",
-                t.agent.display_name(),
-                scope_str,
-                t.path.display()
-            )
+            match t.agent {
+                Some(agent) => format!(
+                    "{}{}: {}",
+                    agent.display_name(),
+                    scope_str,
+                    t.path.display()
+                ),
+                None => format!("{}", t.path.display()),
+            }
         })
         .collect();
 
@@ -254,12 +284,18 @@ pub fn run(args: AddArgs, config: &Config, cli: &Cli) -> Result<i32, SkiloError>
 
     for target in &targets {
         if !cli.quiet && targets.len() > 1 {
-            println!("Installing to {}...", target.agent.display_name().cyan());
+            let target_name = target
+                .agent
+                .map(|a| a.display_name().to_string())
+                .unwrap_or_else(|| target.path.display().to_string());
+            println!("Installing to {}...", target_name.cyan());
         }
 
         // Check for feature compatibility warnings
         if !cli.quiet {
-            check_feature_warnings(&skills, target.agent, &source_path);
+            if let Some(agent) = target.agent {
+                check_feature_warnings(&skills, agent, &source_path);
+            }
         }
 
         let installed = install_skills(&skills, &target.path, args.yes, cli.quiet)?;

@@ -1,10 +1,11 @@
 //! List installed skills.
 
+use crate::agent::Agent;
 use crate::cli::{Cli, ListArgs};
 use crate::config::Config;
 use crate::error::SkiloError;
 use crate::output::get_formatter;
-use crate::scope::{list_skills, InstalledSkill, Scope};
+use crate::scope::{list_skills, list_skills_from_path, InstalledSkill, Scope};
 use colored::Colorize;
 
 /// Run the list command.
@@ -17,26 +18,41 @@ pub fn run(args: ListArgs, config: &Config, cli: &Cli) -> Result<i32, SkiloError
         .canonicalize()
         .unwrap_or_else(|_| args.path.clone());
 
-    // Determine agent
-    let agent = match args.agent.as_ref().map(|a| a.to_selection()) {
-        Some(crate::cli::AgentSelection::Single(a)) => a,
-        Some(crate::cli::AgentSelection::All) | None => config.add.default_agent,
+    // Determine agent (None means use ./skills/)
+    let agent: Option<Agent> = match args.agent.as_ref().map(|a| a.to_selection()) {
+        Some(crate::cli::AgentSelection::Single(a)) => Some(a),
+        Some(crate::cli::AgentSelection::All) => config.add.default_agent,
+        None => config.add.default_agent,
     };
 
     // Collect skills based on flags
-    let (project_skills, global_skills) = if args.all {
-        // List both project and global
-        let project = list_skills(agent, Scope::Project, &project_root);
-        let global = list_skills(agent, Scope::Global, &project_root);
-        (project, global)
-    } else if args.global {
-        // List only global
-        let global = list_skills(agent, Scope::Global, &project_root);
-        (Vec::new(), global)
-    } else {
-        // List only project (default)
-        let project = list_skills(agent, Scope::Project, &project_root);
-        (project, Vec::new())
+    let (project_skills, global_skills) = match agent {
+        Some(agent) => {
+            if args.all {
+                // List both project and global
+                let project = list_skills(agent, Scope::Project, &project_root);
+                let global = list_skills(agent, Scope::Global, &project_root);
+                (project, global)
+            } else if args.global {
+                // List only global
+                let global = list_skills(agent, Scope::Global, &project_root);
+                (Vec::new(), global)
+            } else {
+                // List only project (default)
+                let project = list_skills(agent, Scope::Project, &project_root);
+                (project, Vec::new())
+            }
+        }
+        None => {
+            // No agent configured - use ./skills/
+            if args.global {
+                formatter.format_error("Global listing requires an agent (use --agent)");
+                return Ok(1);
+            }
+            let skills_dir = project_root.join("skills");
+            let project = list_skills_from_path(&skills_dir, None, Scope::Project);
+            (project, Vec::new())
+        }
     };
 
     let total_skills = project_skills.len() + global_skills.len();
@@ -49,17 +65,21 @@ pub fn run(args: ListArgs, config: &Config, cli: &Cli) -> Result<i32, SkiloError
         } else {
             "in project"
         };
+        let target = agent
+            .map(|a| a.display_name().to_string())
+            .unwrap_or_else(|| "skills/".to_string());
         formatter.format_message(&format!(
             "No skills installed {} for {}.",
-            scope_desc,
-            agent.display_name()
+            scope_desc, target
         ));
         return Ok(0);
     }
 
     // Print project skills
     if !project_skills.is_empty() {
-        let dir = agent.skills_dir();
+        let dir = agent
+            .map(|a| a.skills_dir().to_string())
+            .unwrap_or_else(|| "skills/".to_string());
         println!("{} ({}):", "Project skills".bold(), dir.dimmed());
         print_skills(&project_skills);
 
@@ -70,9 +90,11 @@ pub fn run(args: ListArgs, config: &Config, cli: &Cli) -> Result<i32, SkiloError
 
     // Print global skills
     if !global_skills.is_empty() {
-        let dir = agent.global_skills_dir();
-        println!("{} ({}):", "Global skills".bold(), dir.dimmed());
-        print_skills(&global_skills);
+        if let Some(agent) = agent {
+            let dir = agent.global_skills_dir();
+            println!("{} ({}):", "Global skills".bold(), dir.dimmed());
+            print_skills(&global_skills);
+        }
     }
 
     // Check for shadowed skills

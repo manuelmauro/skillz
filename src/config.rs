@@ -164,8 +164,8 @@ impl Default for NewConfig {
 #[derive(Debug, Deserialize)]
 #[serde(default)]
 pub struct AddConfig {
-    /// Target agent for skill installation.
-    pub default_agent: Agent,
+    /// Target agent for skill installation. If None, installs to ./skills/ in current directory.
+    pub default_agent: Option<Agent>,
     /// Prompt before installing (false for CI).
     pub confirm: bool,
     /// Validate skills before installing.
@@ -175,7 +175,7 @@ pub struct AddConfig {
 impl Default for AddConfig {
     fn default() -> Self {
         Self {
-            default_agent: Agent::default(),
+            default_agent: None,
             confirm: true,
             validate: true,
         }
