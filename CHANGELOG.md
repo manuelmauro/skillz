@@ -7,20 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.0] - 2026-01-21
+
 ### Added
 
 - `remove` command to uninstall skills by name
-  - `skilo remove my-skill` removes a skill from the project
-  - `skilo remove --global --agent claude my-skill` removes from global scope
-  - `skilo remove --yes my-skill` skips confirmation prompt
-  - Supports removing multiple skills at once
-- `self completions` command to generate shell completions
-  - Supports bash, zsh, fish, powershell, and elvish
+- `self completions` command to generate shell completions (bash, zsh, fish, powershell, elvish)
 
 ### Changed
 
 - Default installation target is now `./skills/` instead of `.claude/skills/`
-  - Use `--agent claude` to install to agent-specific directories
+  - Use `--agent` to install to agent-specific directories
   - Configure `default_agent` in `.skilorc.toml` to restore previous behavior
 - Confirmation prompts now require explicit `y` or `n` (pressing Enter is ignored)
 
