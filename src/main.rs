@@ -35,9 +35,7 @@ fn main() -> Result<()> {
             SelfCommand::Update(update_args) => {
                 commands::self_update::run(update_args.clone(), &config, &cli)?
             }
-            SelfCommand::Completions(comp_args) => {
-                commands::completions::run(comp_args.clone())?
-            }
+            SelfCommand::Completions(comp_args) => commands::completions::run(comp_args.clone())?,
         },
     };
 

@@ -6,10 +6,10 @@ pub mod add;
 pub mod agents;
 /// The `cache` command implementation.
 pub mod cache;
-/// The `completions` command implementation.
-pub mod completions;
 /// The `check` command implementation.
 pub mod check;
+/// The `completions` command implementation.
+pub mod completions;
 /// The `fmt` command implementation.
 pub mod fmt;
 /// The `lint` command implementation.
